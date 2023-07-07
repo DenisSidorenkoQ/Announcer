@@ -23,17 +23,17 @@ public class TaskService {
 
     @Transactional
     public boolean updateTask(Task task) {
-        boolean taskIsExists = taskRepository.existsById(task.getId());
-        if(taskIsExists) {
-            try {
-                taskRepository.updateTask(task.getId(), task.getMail(), task.getText(), task.getTime());
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
+    boolean taskExists = taskRepository.existsById(task.getId());
+    if(taskExists) {
+        try {
+            taskRepository.updateTask(task.getId(), task.getMail(), task.getText(), task.getTime());
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
+    return false;
+}
 
     public List<Task> getAllByDate(final LocalDate date) {
         Date startOfDay = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
