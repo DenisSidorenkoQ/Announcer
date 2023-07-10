@@ -2,7 +2,6 @@ package com.exmple.mail.controller;
 
 import com.exmple.mail.dto.request.SendMessageByTimeRequest;
 import com.exmple.mail.service.MailService;
-import java.util.Date;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
