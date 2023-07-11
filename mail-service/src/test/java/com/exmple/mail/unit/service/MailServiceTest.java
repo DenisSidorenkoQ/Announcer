@@ -1,6 +1,7 @@
 package com.exmple.mail.unit.service;
 
 import com.exmple.mail.service.MailService;
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,10 +37,11 @@ public class MailServiceTest {
         String recipient = "test@gmail.com";
         String text = "Text";
         String title = "Title";
-
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
+
         mailService.sendMessage(recipient, text, title);
+
         verify(javaMailSender, times(1)).send(any(MimeMessage.class));
     }
 }
