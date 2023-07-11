@@ -2,6 +2,7 @@ version: "3"
 
 services:
   task-service:
+    container_name: task-service
     build:
       context: task-service
     depends_on:
@@ -13,6 +14,15 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
     ports:
       - "8080:8080"
+  mail-service:
+    container_name: mail-service
+    build:
+      context: mail-service
+    depends_on:
+      - postgres
+    restart: on-failure
+    ports:
+      - "8081:8081"
   postgres:
     image: postgres:bullseye
     container_name: database
