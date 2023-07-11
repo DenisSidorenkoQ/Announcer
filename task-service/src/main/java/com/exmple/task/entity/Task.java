@@ -20,6 +20,7 @@ public class Task {
     @GeneratedValue(strategy = IDENTITY)
     private long id;
     private String mail;
+    private String title;
     private String text;
     @Temporal(TemporalType.TIMESTAMP)
     private Date time;

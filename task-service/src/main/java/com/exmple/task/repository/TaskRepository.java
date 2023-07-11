@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Modifying
-    @Query("UPDATE Task AS t SET t.mail=:mail, t.text=:text, t.time=:time WHERE t.id=:id")
-    void updateTask(@Param("id") long id, @Param("mail") String mail, @Param("text") String text, @Param("time") Date time);
+    @Query("UPDATE Task AS t SET t.mail=:mail, t.text=:text, t.title=:title, t.time=:time WHERE t.id=:id")
+    void updateTask(@Param("id") long id, @Param("mail") String mail, @Param("text") String text, @Param("title") String title, @Param("time") Date time);
 
     List<Task> findAllByMail(String mail);
 
