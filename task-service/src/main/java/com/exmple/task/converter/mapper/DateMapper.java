@@ -8,4 +8,8 @@ public class DateMapper {
     public Date longAsDate(final long timestamp) {
         return new Date(timestamp * 1000);
     }
+
+    public long dateAsLong(final Date date) {
+        return date.getTime();
+    }
 }

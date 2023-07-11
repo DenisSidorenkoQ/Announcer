@@ -2,8 +2,10 @@ package com.exmple.task.controller;
 
 import com.exmple.task.converter.TaskConverter;
 import com.exmple.task.dto.request.UpsertTaskRequest;
+import com.exmple.task.dto.response.TaskResponse;
 import com.exmple.task.entity.Task;
 import com.exmple.task.service.TaskService;
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +21,14 @@ public class TaskController {
     private final TaskConverter taskConverter;
 
     @GetMapping
-    public List<Task> getTasksByMail(@RequestParam("mail") final String mail) {
-        return taskService.getTaskByMail(mail);
+    public List<TaskResponse> getTasksByMail(@RequestParam("mail") final String mail) {
+        List<Task> taskList = taskService.getTaskByMail(mail);
+        List<TaskResponse> taskResponseList = new ArrayList<>();
+        taskList.forEach(task -> {
+            taskResponseList.add(taskConverter.toTaskResponseDto(task));
+        });
+
+        return taskResponseList;
     }
 
     @PostMapping

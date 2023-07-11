@@ -3,7 +3,6 @@ package com.exmple.task.entity;
 import java.util.Date;
 import javax.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -12,8 +11,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Cacheable
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "tasks")
 public class Task {
     @Id

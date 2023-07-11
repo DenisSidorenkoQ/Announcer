@@ -31,7 +31,7 @@ public class NotifierScheduler {
 
         RestTemplate restTemplate = new RestTemplate();
         taskList.forEach(task -> {
-            ResponseEntity<SendMessageByTime> response = restTemplate.postForEntity(sendMailURI, taskConverter.toDto(task), SendMessageByTime.class);
+            ResponseEntity<SendMessageByTime> response = restTemplate.postForEntity(sendMailURI, taskConverter.toSendMessageByTimeDto(task), SendMessageByTime.class);
             if (response.getStatusCode() == HttpStatus.OK) {
                 taskService.deleteById(task.getId());
             }
