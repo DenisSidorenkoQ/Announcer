@@ -23,25 +23,33 @@ public class TaskService {
 
     @Transactional
     public boolean updateTask(Task task) {
-    boolean taskExists = taskRepository.existsById(task.getId());
-    if(taskExists) {
-        try {
-            taskRepository.updateTask(task.getId(), task.getMail(), task.getText(), task.getTime());
-            return true;
-        } catch (Exception e) {
-            return false;
+        boolean taskExists = taskRepository.existsById(task.getId());
+        if (taskExists) {
+            try {
+                taskRepository
+                        .updateTask(task.getId(), task.getMail(), task.getText(), task.getTitle(), task.getTime());
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         }
-    }
-    return false;
-}
-
-    public List<Task> getAllByDate(final LocalDate date) {
-        Date startOfDay = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date endOfDay = Date.from(date.atTime(LocalTime.MAX).atZone(ZoneId.systemDefault()).toInstant());
-        return taskRepository.findAllByDate(startOfDay, endOfDay);
+        return false;
     }
 
     public List<Task> getTaskByMail(String mail) {
         return taskRepository.findAllByMail(mail);
+    }
+
+    public List<Task> findAllByDate(Date startDate, Date endDate) {
+        return taskRepository.findAllByDate(startDate, endDate);
+    }
+
+    public boolean deleteById(long id) {
+        try {
+            taskRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
