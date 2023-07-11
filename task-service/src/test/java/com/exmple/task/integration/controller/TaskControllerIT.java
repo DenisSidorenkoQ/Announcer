@@ -55,7 +55,8 @@ public class TaskControllerIT {
                 .param("mail", "testmail@gmail.com")
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{\"id\":3,\"mail\":\"testmail@gmail.com\",\"title\":\"Title\",\"text\":\"Text\",\"time\":0},{\"id\":4,\"mail\":\"testmail@gmail.com\",\"title\":\"Title\",\"text\":\"Text\",\"time\":0}]"));
+                .andExpect(content().json("[{\"id\":3,\"mail\":\"testmail@gmail.com\",\"title\":\"Title\",\"text\":\"Text\",\"time\":0}," +
+                        "{\"id\":4,\"mail\":\"testmail@gmail.com\",\"title\":\"Title\",\"text\":\"Text\",\"time\":0}]"));
     }
 
     @Test
