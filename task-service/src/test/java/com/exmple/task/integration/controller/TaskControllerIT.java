@@ -4,14 +4,13 @@ package com.exmple.task.integration.controller;
 import com.exmple.task.config.KafkaConfig;
 import com.exmple.task.entity.Task;
 import com.exmple.task.integration.config.TestConfigIT;
-import com.exmple.task.producer.Producer;
+import com.exmple.task.producer.KafkaProducer;
 import com.exmple.task.repository.TaskRepository;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,7 +37,7 @@ public class TaskControllerIT {
     @MockBean
     private KafkaConfig conf;
     @MockBean
-    private Producer producer;
+    private KafkaProducer kafkaProducer;
 
     @BeforeAll
     void init() {
@@ -59,9 +58,7 @@ public class TaskControllerIT {
 
     @Test
     public void getTasksByMailShouldReturnTaskList() throws Exception {
-        mockMvc.perform(get("/api/v1/tasks")
-                .param("mail", "testmail@gmail.com")
-                )
+        mockMvc.perform(get("/api/v1/tasks/{mail}", "testmail@gmail.com"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{\"id\":3,\"mail\":\"testmail@gmail.com\",\"title\":\"Title\",\"text\":\"Text\",\"time\":0}," +
                         "{\"id\":4,\"mail\":\"testmail@gmail.com\",\"title\":\"Title\",\"text\":\"Text\",\"time\":0}]"));

@@ -4,7 +4,6 @@ import com.exmple.task.converter.TaskConverter;
 import com.exmple.task.entity.Task;
 import com.exmple.task.producer.Producer;
 import com.exmple.task.service.TaskService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -29,11 +28,7 @@ public class NotifierScheduler {
         List<Task> taskList = taskService.findAllByDate(startDate, endDate);
 
         taskList.forEach(task -> {
-            try {
-                producer.sendMessage(taskTopic, taskConverter.toSendMessageByTimeDto(task));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+            producer.sendMessage(taskTopic, taskConverter.toSendMessageByTimeDto(task));
         });
     }
 }
