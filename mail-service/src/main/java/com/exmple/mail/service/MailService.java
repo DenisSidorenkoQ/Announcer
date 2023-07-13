@@ -13,14 +13,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@EnableAsync
 public class MailService {
     private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String mailSenderName;
 
-    @Async
     public void sendMessage(String recipient, String text, String title) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

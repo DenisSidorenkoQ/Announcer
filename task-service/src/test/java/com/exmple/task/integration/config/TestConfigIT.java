@@ -44,7 +44,7 @@ public class TestConfigIT {
 
     @Bean
     public DataSource dataSource(JdbcDatabaseContainer<?> jdbcDatabaseContainer) {
-        var hikariConfig = new HikariConfig();
+        HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(jdbcDatabaseContainer.getJdbcUrl());
         hikariConfig.setUsername(jdbcDatabaseContainer.getUsername());
         hikariConfig.setPassword(jdbcDatabaseContainer.getPassword());

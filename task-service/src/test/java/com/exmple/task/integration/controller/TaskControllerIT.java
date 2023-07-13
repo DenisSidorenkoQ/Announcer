@@ -1,16 +1,20 @@
 package com.exmple.task.integration.controller;
 
 
+import com.exmple.task.config.KafkaConfig;
 import com.exmple.task.entity.Task;
 import com.exmple.task.integration.config.TestConfigIT;
+import com.exmple.task.producer.Producer;
 import com.exmple.task.repository.TaskRepository;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,6 +35,10 @@ public class TaskControllerIT {
     private MockMvc mockMvc;
     @Autowired
     private TaskRepository taskRepository;
+    @MockBean
+    private KafkaConfig conf;
+    @MockBean
+    private Producer producer;
 
     @BeforeAll
     void init() {

@@ -1,27 +1,26 @@
 package com.exmple.task.scheduler;
 
 import com.exmple.task.converter.TaskConverter;
-import com.exmple.task.dto.request.SendMessageByTime;
 import com.exmple.task.entity.Task;
+import com.exmple.task.producer.Producer;
 import com.exmple.task.service.TaskService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
 public class NotifierScheduler {
     private final TaskService taskService;
     private final TaskConverter taskConverter;
-    @Value("${mail-service.send-by-time.url}")
-    private String sendMailURI;
+    private final Producer producer;
+    @Value("${spring.kafka.topic.task.name}")
+    private String taskTopic;
 
     @Scheduled(fixedDelay = 30000)
     public void sendScheduledTasks() {
@@ -29,11 +28,11 @@ public class NotifierScheduler {
         Date endDate = new Date(Instant.now().toEpochMilli() + 30000);
         List<Task> taskList = taskService.findAllByDate(startDate, endDate);
 
-        RestTemplate restTemplate = new RestTemplate();
         taskList.forEach(task -> {
-            ResponseEntity<SendMessageByTime> response = restTemplate.postForEntity(sendMailURI, taskConverter.toSendMessageByTimeDto(task), SendMessageByTime.class);
-            if (response.getStatusCode() == HttpStatus.OK) {
-                taskService.deleteById(task.getId());
+            try {
+                producer.sendMessage(taskTopic, taskConverter.toSendMessageByTimeDto(task));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
             }
         });
     }
