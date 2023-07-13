@@ -1,6 +1,6 @@
 package com.exmple.task.producer;
 
-import com.exmple.task.dto.request.SendMessageByTime;
+import com.exmple.task.dto.response.SendTaskMessageResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,9 @@ public class KafkaProducer implements Producer {
     private final KafkaTemplate<String, String> kafkaTemplate;
     @Async
     @Override
-    public void sendMessage(String taskTopic, SendMessageByTime sendMessageByTime) {;
+    public void sendTaskMessage(String taskTopic, SendTaskMessageResponse sendTaskMessageResponse) {;
         try {
-            String message = objectMapper.writeValueAsString(sendMessageByTime);
+            String message = objectMapper.writeValueAsString(sendTaskMessageResponse);
             kafkaTemplate.send(taskTopic, message);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

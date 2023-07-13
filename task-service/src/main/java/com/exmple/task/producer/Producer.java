@@ -1,7 +1,7 @@
 package com.exmple.task.producer;
 
-import com.exmple.task.dto.request.SendMessageByTime;
+import com.exmple.task.dto.response.SendTaskMessageResponse;
 
 public interface Producer {
-    void sendMessage(String taskTopic, SendMessageByTime sendMessageByTime);
+    void sendTaskMessage(String taskTopic, SendTaskMessageResponse sendTaskMessageResponse);
 }

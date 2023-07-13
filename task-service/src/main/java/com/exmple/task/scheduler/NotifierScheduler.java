@@ -28,7 +28,7 @@ public class NotifierScheduler {
         List<Task> taskList = taskService.findAllByDate(startDate, endDate);
 
         taskList.forEach(task -> {
-            producer.sendMessage(taskTopic, taskConverter.toSendMessageByTimeDto(task));
+            producer.sendTaskMessage(taskTopic, taskConverter.toSendTaskMessageDto(task));
         });
     }
 }
