@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SendMessageByTimeRequest {
+public class SendMessageRequest {
     @Pattern(message = "Recipient is not valid", regexp =
             "^\\S+@\\S+\\.\\S+$")
     private String recipient;

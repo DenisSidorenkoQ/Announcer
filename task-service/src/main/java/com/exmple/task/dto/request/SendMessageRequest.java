@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class SendMessageByTime {
+public class SendMessageRequest {
     private String recipient;
     private String title;
     private String text;

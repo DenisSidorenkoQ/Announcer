@@ -1,7 +1,7 @@
 package com.exmple.task.scheduler;
 
 import com.exmple.task.converter.TaskConverter;
-import com.exmple.task.dto.request.SendMessageByTime;
+import com.exmple.task.dto.request.SendMessageRequest;
 import com.exmple.task.entity.Task;
 import com.exmple.task.service.TaskService;
 import java.time.Instant;
@@ -31,7 +31,7 @@ public class NotifierScheduler {
 
         RestTemplate restTemplate = new RestTemplate();
         taskList.forEach(task -> {
-            ResponseEntity<SendMessageByTime> response = restTemplate.postForEntity(sendMailURI, taskConverter.toSendMessageByTimeDto(task), SendMessageByTime.class);
+            ResponseEntity<SendMessageRequest> response = restTemplate.postForEntity(sendMailURI, taskConverter.toSendTaskMessageRequest(task), SendMessageRequest.class);
             if (response.getStatusCode() == HttpStatus.OK) {
                 taskService.deleteById(task.getId());
             }

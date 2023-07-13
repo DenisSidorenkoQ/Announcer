@@ -1,6 +1,6 @@
 package com.exmple.mail.controller;
 
-import com.exmple.mail.dto.request.SendMessageByTimeRequest;
+import com.exmple.mail.dto.request.SendMessageRequest;
 import com.exmple.mail.service.MailService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class MailController {
     private final MailService mailService;
 
     @PostMapping("/by-time/send")
-    public void sendMessage(@RequestBody @Valid SendMessageByTimeRequest request) {
+    public void sendMessage(@RequestBody @Valid SendMessageRequest request) {
         mailService.sendMessage(request.getRecipient(), request.getText(), request.getTitle());
     }
 }

@@ -51,9 +51,7 @@ public class TaskControllerIT {
 
     @Test
     public void getTasksByMailShouldReturnTaskList() throws Exception {
-        mockMvc.perform(get("/api/v1/tasks")
-                .param("mail", "testmail@gmail.com")
-                )
+        mockMvc.perform(get("/api/v1/tasks/{mail}", "testmail@gmail.com"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{\"id\":3,\"mail\":\"testmail@gmail.com\",\"title\":\"Title\",\"text\":\"Text\",\"time\":0}," +
                         "{\"id\":4,\"mail\":\"testmail@gmail.com\",\"title\":\"Title\",\"text\":\"Text\",\"time\":0}]"));
