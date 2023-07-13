@@ -1,7 +1,7 @@
 package com.exmple.task.producer;
 
-import com.exmple.task.dto.response.SendTaskMessageResponse;
+import com.exmple.task.dto.request.SendMessageRequest;
 
 public interface Producer {
-    void sendTaskMessage(String taskTopic, SendTaskMessageResponse sendTaskMessageResponse);
+    void sendMessage(String topic, SendMessageRequest sendMessageRequest);
 }

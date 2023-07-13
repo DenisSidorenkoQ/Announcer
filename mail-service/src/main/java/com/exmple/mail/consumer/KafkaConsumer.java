@@ -1,6 +1,6 @@
 package com.exmple.mail.consumer;
 
-import com.exmple.mail.dto.request.SendTaskMessageRequest;
+import com.exmple.mail.dto.request.SendMessageRequest;
 import com.exmple.mail.service.MailService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,11 +20,11 @@ public class KafkaConsumer implements Consumer {
     @Override
     public void consumeTaskMessage(String message) {
         try {
-            SendTaskMessageRequest sendTaskMessageRequest =
-                    objectMapper.readValue(message, SendTaskMessageRequest.class);
-            mailService.sendMessage(sendTaskMessageRequest.getRecipient(),
-                    sendTaskMessageRequest.getText(),
-                    sendTaskMessageRequest.getTitle()
+            SendMessageRequest sendMessageRequest =
+                    objectMapper.readValue(message, SendMessageRequest.class);
+            mailService.sendMessage(sendMessageRequest.getRecipient(),
+                    sendMessageRequest.getText(),
+                    sendMessageRequest.getTitle()
             );
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

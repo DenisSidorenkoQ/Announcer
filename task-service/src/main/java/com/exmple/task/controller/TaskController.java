@@ -25,7 +25,7 @@ public class TaskController {
         List<Task> taskList = taskService.getTaskByMail(mail);
         List<TaskResponse> taskResponseList = new ArrayList<>();
         taskList.forEach(task -> {
-            taskResponseList.add(taskConverter.toTaskResponseDto(task));
+            taskResponseList.add(taskConverter.toTaskResponse(task));
         });
 
         return taskResponseList;

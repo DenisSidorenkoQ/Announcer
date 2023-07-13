@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SendTaskMessageRequest {
+public class SendMessageRequest {
     @Pattern(message = "Recipient is not valid", regexp =
             "^\\S+@\\S+\\.\\S+$")
     private String recipient;
