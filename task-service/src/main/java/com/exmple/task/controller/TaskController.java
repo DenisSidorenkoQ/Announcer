@@ -20,8 +20,8 @@ public class TaskController {
     private final TaskService taskService;
     private final TaskConverter taskConverter;
 
-    @GetMapping
-    public List<TaskResponse> getTasksByMail(@RequestParam("mail") final String mail) {
+    @GetMapping("/{mail}")
+    public List<TaskResponse> getTasksByMail(@PathVariable("mail") final String mail) {
         List<Task> taskList = taskService.getTaskByMail(mail);
         List<TaskResponse> taskResponseList = new ArrayList<>();
         taskList.forEach(task -> {
