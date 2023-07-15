@@ -1,6 +1,5 @@
 package com.exmple.mail.service;
 
-import java.util.Date;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,9 @@ public class MailService {
 
     // TODO: давай порассуждаем какие могут быть проблемы с @Async? Как можно сделать без @Async, но с гарантированной
     //  доставкой сообщения? Сразу предупреждаю, это вопрос со звездочкой.
+    // Проблемы с @Async могут быть связаны с тем, что асинхронные методы не гарантируют доставку сообщения.
+    // Если нам нужна гарантированная доставка сообщения, то можно использовать различные брокеры сообщений и возможно Spring Integration.
+    // К примеру в Kafka гарантировать доставку сообщений можно при помощи acknowledgements и повторной отправке сообщений в случае ошибки.
     @Async
     public void sendMessage(String recipient, String text, String title) {
         try {
@@ -34,7 +36,9 @@ public class MailService {
             javaMailSender.send(message);
         } catch (MessagingException e) {
             // TODO: какие тут проблемы?
+            // При неудачной отправке сообщения мы не оповещаем пользователя и не решаем появившуюся проблеме
             e.printStackTrace();
         }
+
     }
 }
