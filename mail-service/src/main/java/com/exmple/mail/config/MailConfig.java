@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 public class MailConfig {
+
+    // TODO: предлагаю вынести все параметры в отдельный конфигурационный класс. Посмотри как это делается в спринге.
     @Value("${spring.mail.host}")
     private String host;
 
@@ -29,6 +31,7 @@ public class MailConfig {
         mailSender.setUsername(username);
         mailSender.setPassword(password);
 
+        // TODO: давай добавим через конфиги, а не будем хардкодить.
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", true);

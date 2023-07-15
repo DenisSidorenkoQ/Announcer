@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
+//  TODO: точно ли для update нужно добавлять Query? Вообще такой общий метод обновления очень опасен. Предлагаю подумать на что его лучше заменить.
     @Modifying
     @Query("UPDATE Task AS t SET t.mail=:mail, t.text=:text, t.title=:title, t.time=:time WHERE t.id=:id")
     void updateTask(@Param("id") long id, @Param("mail") String mail, @Param("text") String text, @Param("title") String title, @Param("time") Date time);

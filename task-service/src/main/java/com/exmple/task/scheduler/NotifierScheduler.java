@@ -23,12 +23,21 @@ public class NotifierScheduler {
     @Value("${mail-service.send-by-time.url}")
     private String sendMailURI;
 
+    // TODO: хард код параметров - нужно это выносить.
+    // TODO: этот класс имеет 2 ответственности: 1) конфигурация шедулера, 2) выполнение логики по отправке. Нужно разбивать на 2 класса.
     @Scheduled(fixedDelay = 30000)
     public void sendScheduledTasks() {
         Date startDate = new Date(Instant.now().toEpochMilli() - 30000);
         Date endDate = new Date(Instant.now().toEpochMilli() + 30000);
+        // TODO: не очень хорошо выгребать все задачи на заданный промежук. Тут 4 проблемы:
+        //  1) мы можем пропустить чего, если приложение долго не работало
+        //  2) нам могут набросать очень большое кол-во задач в базу и мы можем повиснуть
+        //  3) если запустить несколько инстансов приложений, они будут друг другу гадить
+        //  4) Retry механизм нужно пересматривать.
+        //  Подумай над всеми этими ньюансами.
         List<Task> taskList = taskService.findAllByDate(startDate, endDate);
 
+        // TODO: каждый раз создаем новый инстанс. Нужно, чтобы у тебя был синглтон бина рест темплета.
         RestTemplate restTemplate = new RestTemplate();
         taskList.forEach(task -> {
             ResponseEntity<SendMessageByTime> response = restTemplate.postForEntity(sendMailURI, taskConverter.toSendMessageByTimeDto(task), SendMessageByTime.class);

@@ -20,6 +20,8 @@ public class MailService {
     @Value("${spring.mail.username}")
     private String mailSenderName;
 
+    // TODO: давай порассуждаем какие могут быть проблемы с @Async? Как можно сделать без @Async, но с гарантированной
+    //  доставкой сообщения? Сразу предупреждаю, это вопрос со звездочкой.
     @Async
     public void sendMessage(String recipient, String text, String title) {
         try {
@@ -31,6 +33,7 @@ public class MailService {
             helper.setText(text, true);
             javaMailSender.send(message);
         } catch (MessagingException e) {
+            // TODO: какие тут проблемы?
             e.printStackTrace();
         }
     }
