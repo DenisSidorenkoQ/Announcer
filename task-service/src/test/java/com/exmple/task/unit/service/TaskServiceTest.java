@@ -30,13 +30,11 @@ public class TaskServiceTest {
     @Test
     public void shouldCreateTask() {
         Task task = Task.builder()
-                .mail("test@gmail.com")
                 .text("Text")
                 .time(new Date(20000))
                 .build();
         Task returnableTask = Task.builder()
-                .id(1)
-                .mail("test@gmail.com").text("Text").time(new Date(20000)).build();
+                .id(1).text("Text").time(new Date(20000)).build();
         given(taskRepository.save(task)).willReturn(returnableTask);
 
         long taskId = taskService.addTask(task);
@@ -49,14 +47,14 @@ public class TaskServiceTest {
     public void shouldGetTaskByMail() {
         String mail = "test@gmail.com";
         List<Task> tasks = new ArrayList<>();
-        tasks.add(Task.builder().mail("test@gmail.com").build());
-        tasks.add(Task.builder().mail("test@gmail.com").build());
-        when(taskRepository.findAllByMail(mail)).thenReturn(tasks);
+        tasks.add(Task.builder().build());
+        tasks.add(Task.builder().build());
+        when(taskRepository.findTaskByAuthor_Mail(mail)).thenReturn(tasks);
 
         List<Task> result = taskService.getTaskByMail(mail);
 
         Assertions.assertEquals(tasks, result);
-        verify(taskRepository, times(1)).findAllByMail(mail);
+        verify(taskRepository, times(1)).findTaskByAuthor_Mail(mail);
     }
 
     @Test
@@ -67,7 +65,7 @@ public class TaskServiceTest {
         boolean result = taskService.updateTask(task);
 
         assertTrue(result);
-        verify(taskRepository).updateTask(task.getId(), task.getMail(), task.getText(), task.getTitle(), task.getTime());
+        verify(taskRepository).updateTask(task.getId(), task.getText(), task.getTitle(), task.getTime());
     }
 
     @Test
@@ -78,24 +76,23 @@ public class TaskServiceTest {
         boolean result = taskService.updateTask(task);
 
         assertFalse(result);
-        verify(taskRepository, never()).updateTask(anyInt(), anyString(), anyString(), anyString(), any(Date.class));
+        verify(taskRepository, never()).updateTask(anyInt(), anyString(), anyString(), any(Date.class));
     }
 
     @Test
     public void testUpdateTaskWhenException() {
         Task task = Task.builder()
                 .id(1)
-                .mail("test@gmail.com")
                 .text("Text")
                 .title("Title")
                 .time(new Date())
                 .build();
         when(taskRepository.existsById(task.getId())).thenReturn(true);
-        doThrow(new RuntimeException()).when(taskRepository).updateTask(task.getId(), task.getMail(), task.getText(), task.getTitle(), task.getTime());
+        doThrow(new RuntimeException()).when(taskRepository).updateTask(task.getId(), task.getText(), task.getTitle(), task.getTime());
 
         boolean result = taskService.updateTask(task);
 
-        verify(taskRepository).updateTask(task.getId(), task.getMail(), task.getText(), task.getTitle(), task.getTime());
+        verify(taskRepository).updateTask(task.getId(), task.getText(), task.getTitle(), task.getTime());
         assertFalse(result);
     }
 

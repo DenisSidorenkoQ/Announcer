@@ -17,13 +17,13 @@ import javax.sql.DataSource;
 
 @TestConfiguration
 public class TestConfigIT {
-    @Value("${test.container.port}")
+    @Value("${spring.datasource.database.port}")
     private int containerPort;
-    @Value("${test.container.datasource.password}")
+    @Value("${spring.datasource.password}")
     private String password;
-    @Value("${test.container.datasource.username}")
+    @Value("${spring.datasource.username}")
     private String username;
-    @Value("${test.datasource.datasource.name}")
+    @Value("${spring.datasource.database.name}")
     private String databaseName;
 
     @Bean(initMethod = "start", destroyMethod = "stop")

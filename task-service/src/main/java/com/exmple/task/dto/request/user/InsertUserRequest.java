@@ -1,4 +1,4 @@
-package com.exmple.task.dto.request;
+package com.exmple.task.dto.request.user;
 
 import javax.validation.constraints.Pattern;
 import lombok.*;
@@ -8,11 +8,9 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class UpsertTaskRequest {
+public class InsertUserRequest {
+    private String name;
     @Pattern(message = "Email is not valid", regexp =
             "^\\S+@\\S+\\.\\S+$")
     private String mail;
-    private String title;
-    private String text;
-    private long timestamp;
 }
