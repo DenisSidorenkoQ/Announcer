@@ -12,8 +12,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 @EnableConfigurationProperties(MailProperties.class)
 @RequiredArgsConstructor
 public class MailConfig {
-
-    // TODO: предлагаю вынести все параметры в отдельный конфигурационный класс. Посмотри как это делается в спринге.
     private final MailProperties mailProperties;
 
     @Bean
@@ -24,7 +22,6 @@ public class MailConfig {
         mailSender.setUsername(mailProperties.getUsername());
         mailSender.setPassword(mailProperties.getPassword());
 
-        // TODO: давай добавим через конфиги, а не будем хардкодить.
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.auth", mailProperties.getAuth());
         props.put("mail.smtp.starttls.enable", mailProperties.getStarttls());
