@@ -6,6 +6,7 @@ services:
       context: task-service
     depends_on:
       - postgres
+      - mail-service
     restart: on-failure
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
