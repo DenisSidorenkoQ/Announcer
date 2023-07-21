@@ -30,3 +30,7 @@ ENTRYPOINT ["java","-jar","/usr/local/lib/mail-service.jar"]
 8. Команда COPY копирует собранный JAR-файл с предыдущего этапа (builder) по пути "/usr/local/lib/mail-service.jar" внутри контейнера. 
 9. Команда EXPOSE открывает порт 8081, чтобы к нему можно было обращаться извне контейнера.
 10. Команда ENTRYPOINT задает команду, которая должна выполняться при запуске контейнера. В данном случае он запускает java-приложение.
+
+Сборка:
+1. docker compose build
+2. docker compose up
