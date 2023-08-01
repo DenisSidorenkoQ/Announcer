@@ -3,10 +3,8 @@ package com.exmple.task.repository;
 import com.exmple.task.entity.Task;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.LockModeType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,7 +21,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findTaskByAuthor_Mail(String mail);
 
-    @Lock(LockModeType.PESSIMISTIC_READ)
     @Query("FROM Task  " +
             "WHERE time < :lastDate AND id >:lastId " +
             "ORDER BY time, id")

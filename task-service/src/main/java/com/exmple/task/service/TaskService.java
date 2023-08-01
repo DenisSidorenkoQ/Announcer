@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -50,7 +49,6 @@ public class TaskService {
         }
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<Task> findTasksByDateAndId(final Date startDate, final long id) {
         return taskRepository.findTasksByDateAndId(startDate, id, PageRequest.of(0, findTasksLimit));
     }
