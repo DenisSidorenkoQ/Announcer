@@ -2,20 +2,22 @@ package com.exmple.task.service;
 
 import com.exmple.task.entity.Task;
 import com.exmple.task.repository.TaskRepository;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+
+    @Value("${tasks.find-tasks.limit}")
+    private int findTasksLimit;
 
     public long addTask(Task task) {
         return taskRepository.save(task).getId();
@@ -26,8 +28,7 @@ public class TaskService {
         boolean taskExists = taskRepository.existsById(task.getId());
         if (taskExists) {
             try {
-                taskRepository
-                        .updateTask(task.getId(), task.getMail(), task.getText(), task.getTitle(), task.getTime());
+                taskRepository.updateTask(task.getId(), task.getText(), task.getTitle(), task.getTime());
                 return true;
             } catch (Exception e) {
                 return false;
@@ -37,11 +38,7 @@ public class TaskService {
     }
 
     public List<Task> getTaskByMail(String mail) {
-        return taskRepository.findAllByMail(mail);
-    }
-
-    public List<Task> findAllByDate(Date startDate, Date endDate) {
-        return taskRepository.findAllByDate(startDate, endDate);
+        return taskRepository.findTaskByAuthor_Mail(mail);
     }
 
     public boolean deleteById(long id) {
@@ -51,5 +48,10 @@ public class TaskService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<Task> findTasksByDateAndId(final Date startDate, final long id) {
+        return taskRepository.findTasksByDateAndId(startDate, id, PageRequest.of(0, findTasksLimit));
     }
 }

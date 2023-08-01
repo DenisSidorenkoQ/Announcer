@@ -32,7 +32,7 @@ public class MailServiceTest {
     }
 
     @Test
-    public void sendMessagePositiveCase() {
+    public void sendMessagePositiveCase() throws Exception {
         String recipient = "test@gmail.com";
         String text = "Text";
         String title = "Title";

@@ -6,6 +6,6 @@ RUN mvn -f /app/pom.xml clean package
 
 FROM adoptopenjdk/openjdk11
 WORKDIR /app
-COPY --from=builder /app/target/task-service-1.0-SNAPSHOT.jar /usr/local/lib/task-service.jar
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/usr/local/lib/task-service.jar"]
+COPY --from=builder /app/target/mail-service-1.0-SNAPSHOT.jar /usr/local/lib/mail-service.jar
+EXPOSE 8081
+ENTRYPOINT ["java","-jar","/usr/local/lib/mail-service.jar"]

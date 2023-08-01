@@ -1,4 +1,4 @@
-package com.exmple.task.dto.response;
+package com.exmple.task.dto.response.task;
 
 import lombok.*;
 
@@ -9,7 +9,6 @@ import lombok.*;
 @Builder
 public class TaskResponse {
     private long id;
-    private String mail;
     private String title;
     private String text;
     private long time;
