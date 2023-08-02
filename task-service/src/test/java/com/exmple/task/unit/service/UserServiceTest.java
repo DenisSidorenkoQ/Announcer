@@ -4,6 +4,7 @@ import com.exmple.task.entity.User;
 import com.exmple.task.repository.UserRepository;
 import com.exmple.task.service.UserService;
 import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,20 +28,17 @@ public class UserServiceTest {
         user.setMail(mail);
         when(userRepository.findUserByMail(mail)).thenReturn(Optional.of(user));
 
-        Optional<User> result = userService.getUserByMail(mail);
+        User result = userService.getUserByMail(mail);
 
-        assertTrue(result.isPresent());
-        assertEquals(mail, result.get().getMail());
+        assertEquals(mail, result.getMail());
     }
 
-    @Test
+    @Test(expected = EntityNotFoundException.class)
     public void testGetUserByMailWhenNotExist() {
         String mail = "test@example.com";
         when(userRepository.findUserByMail(mail)).thenReturn(Optional.empty());
 
-        Optional<User> result = userService.getUserByMail(mail);
-
-        assertFalse(result.isPresent());
+        User result = userService.getUserByMail(mail);
     }
 
     @Test
@@ -49,8 +47,8 @@ public class UserServiceTest {
         user.setMail("test@example.com");
         when(userRepository.save(user)).thenReturn(user);
 
-        long userId = userService.addUser(user);
+        String userMail = userService.createUser(user);
 
-        assertEquals(user.getId(), userId);
+        assertEquals(user.getMail(), userMail);
     }
 }

@@ -5,8 +5,6 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 @Builder
 @Entity
 @AllArgsConstructor
@@ -16,10 +14,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private long id;
-    private String name;
     private String mail;
+    private String name;
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Task> tasks;

@@ -6,6 +6,8 @@ import com.exmple.task.service.TaskService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +39,7 @@ public class TaskServiceTest {
                 .id(1).text("Text").time(new Date(20000)).build();
         given(taskRepository.save(task)).willReturn(returnableTask);
 
-        long taskId = taskService.addTask(task);
+        long taskId = taskService.createTask(task);
 
         assertThat(taskId, is(1L));
         verify(taskRepository, times(1)).save(task);
@@ -58,63 +60,82 @@ public class TaskServiceTest {
     }
 
     @Test
-    public void testUpdateTaskWhenExists() {
-        Task task = Task.builder().id(1).build();
-        when(taskRepository.existsById(task.getId())).thenReturn(true);
+    public void testUpdateTaskTextWhenExists() {
+        Task task = Task.builder().id(1).text("testText").build();
+        when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
-        boolean result = taskService.updateTask(task);
+        taskService.updateTaskText(task.getId(), task.getText());
 
-        assertTrue(result);
-        verify(taskRepository).updateTask(task.getId(), task.getText(), task.getTitle(), task.getTime());
+        verify(taskRepository).saveAndFlush(task);
     }
 
-    @Test
-    public void testUpdateTaskWhenNotExists() {
-        Task task = Task.builder().id(1).build();
-        when(taskRepository.existsById(task.getId())).thenReturn(false);
+    @Test(expected = EntityNotFoundException.class)
+    public void testUpdateTaskTextWhenNotExists() {
+        Task task = Task.builder().id(1).text("testText").build();
+        when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
 
-        boolean result = taskService.updateTask(task);
+        taskService.updateTaskText(task.getId(), task.getText());
 
-        assertFalse(result);
         verify(taskRepository, never()).updateTask(anyInt(), anyString(), anyString(), any(Date.class));
     }
 
     @Test
-    public void testUpdateTaskWhenException() {
-        Task task = Task.builder()
-                .id(1)
-                .text("Text")
-                .title("Title")
-                .time(new Date())
-                .build();
-        when(taskRepository.existsById(task.getId())).thenReturn(true);
-        doThrow(new RuntimeException()).when(taskRepository).updateTask(task.getId(), task.getText(), task.getTitle(), task.getTime());
+    public void testUpdateTitleWhenExists() {
+        Task task = Task.builder().id(1).title("testText").build();
+        when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
-        boolean result = taskService.updateTask(task);
+        taskService.updateTaskTitle(task.getId(), task.getTitle());
 
-        verify(taskRepository).updateTask(task.getId(), task.getText(), task.getTitle(), task.getTime());
-        assertFalse(result);
+        verify(taskRepository).saveAndFlush(task);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testUpdateTaskTitleWhenNotExists() {
+        Task task = Task.builder().id(1).title("testText").build();
+        when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
+
+        taskService.updateTaskTitle(task.getId(), task.getTitle());
+
+        verify(taskRepository, never()).updateTask(anyInt(), anyString(), anyString(), any(Date.class));
+    }
+
+    @Test
+    public void testUpdateTaskTimeWhenExists() {
+        Task task = Task.builder().id(1).time(new Date(1000000)).build();
+        when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
+
+        taskService.updateTaskTime(task.getId(), task.getTime());
+
+        verify(taskRepository).saveAndFlush(task);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testUpdateTaskTimeWhenNotExists() {
+        Task task = Task.builder().id(1).time(new Date(1000000)).build();
+        when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
+
+        taskService.updateTaskTime(task.getId(), task.getTime());
+
+        verify(taskRepository, never()).saveAndFlush(task);
     }
 
     @Test
     public void testDeleteByIdWhenDeleted() {
         long id = 1L;
+        when(taskRepository.findById(id)).thenReturn(Optional.of(Task.builder().build()));
         doNothing().when(taskRepository).deleteById(id);
 
-        boolean result = taskService.deleteById(id);
+        taskService.deleteById(id);
 
-        assertTrue(result);
         verify(taskRepository, times(1)).deleteById(id);
     }
 
-    @Test
-    public void testDeleteByIdWhenException() {
+    @Test(expected = EntityNotFoundException.class)
+    public void testDeleteByIdWhenNotExists() {
         long id = 1L;
 
-        doThrow(new RuntimeException()).when(taskRepository).deleteById(id);
-        boolean result = taskService.deleteById(id);
+        taskService.deleteById(id);
 
-        assertFalse(result);
-        verify(taskRepository, times(1)).deleteById(id);
+        verify(taskRepository, times(0)).deleteById(id);
     }
 }

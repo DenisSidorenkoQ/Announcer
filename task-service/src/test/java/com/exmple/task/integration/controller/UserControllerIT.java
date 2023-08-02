@@ -43,18 +43,18 @@ public class UserControllerIT {
 
     @BeforeAll
     void init() {
-        userRepository.save(User.builder().id(1).name("TestUser").mail("test@gmail.com").build());
-        taskRepository.save(Task.builder().title("Title").author(User.builder().id(1).name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
-        taskRepository.save(Task.builder().title("Title").author(User.builder().id(1).name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
+        userRepository.save(User.builder().name("TestUser").mail("test@gmail.com").build());
+        taskRepository.save(Task.builder().title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
+        taskRepository.save(Task.builder().title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
     }
 
     @Test
-    public void createNewUserShouldReturnCreatedUserId() throws Exception {
+    public void createNewUserShouldReturnCreatedUserMail() throws Exception {
         mockMvc.perform(post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"TestUser\",\"mail\":\"test2@gmail.com\"}"))
+                        .content("{\"name\":\"TestUser\",\"mail\":\"test3@gmail.com\"}"))
                 .andExpect(status().isCreated())
-                .andExpect(content().string("2"));
+                .andExpect(content().string("test3@gmail.com"));
     }
 
     @Test
@@ -78,26 +78,6 @@ public class UserControllerIT {
     @Test
     public void getUserShouldReturnNotFoundWhenUserNotExists() throws Exception {
         mockMvc.perform(get("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("mail", "test3@gmail.com")
-                        .content(""))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void getUserWithTasksByMailShouldReturnOkWhenUserIsExists() throws Exception {
-        mockMvc.perform(get("/api/v1/users/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("mail", "test@gmail.com")
-                        .content(""))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"name\":\"TestUser\",\"mail\":\"test@gmail.com\",\"tasks\":[{\"id\":1,\"title\":\"Title\",\"text\":\"Text\",\"time\":\"1970-01-01T00:00:00.000+00:00\"}," +
-                        "{\"id\":2,\"title\":\"Title\",\"text\":\"Text\",\"time\":\"1970-01-01T00:00:00.000+00:00\"}]}"));
-    }
-
-    @Test
-    public void getUserWithTasksByMailShouldReturnNotFoundWhenUserNotExists() throws Exception {
-        mockMvc.perform(get("/api/v1/users/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("mail", "test3@gmail.com")
                         .content(""))

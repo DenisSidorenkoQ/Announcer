@@ -23,7 +23,7 @@ public class Task {
     @Temporal(TemporalType.TIMESTAMP)
     private Date time;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_mail")
     @JsonBackReference
     private User author;
 }

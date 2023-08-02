@@ -3,7 +3,6 @@ package com.exmple.task.converter;
 import com.exmple.task.converter.mapper.DateMapper;
 import com.exmple.task.dto.request.task.InsertTaskRequest;
 import com.exmple.task.dto.request.SendMessageByTime;
-import com.exmple.task.dto.request.task.UpdateTaskRequest;
 import com.exmple.task.dto.response.task.TaskResponse;
 import com.exmple.task.entity.Task;
 import org.mapstruct.Mapper;
@@ -14,11 +13,6 @@ import org.mapstruct.Mappings;
 public interface TaskConverter {
     @Mapping(source = "request.timestamp", target = "time")
     Task fromDto(final InsertTaskRequest request);
-
-    @Mappings({
-            @Mapping(source = "request.timestamp", target = "time")
-    })
-    Task fromDto(final UpdateTaskRequest request, final int id);
 
     @Mappings({
             @Mapping(source = "task.author.mail", target = "recipient")

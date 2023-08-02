@@ -18,32 +18,22 @@ public class UserController {
     private final UserConverter converter;
 
     @GetMapping
-    public ResponseEntity getUser(@RequestParam("mail") final String mail) {
-        Optional<User> foundUser = userService.getUserByMail(mail);
-
-        return foundUser
-                .map(user -> new ResponseEntity(converter.toUserResponse(user), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND));
+    public ResponseEntity getUserByMail(@RequestParam("mail") final String mail) {
+        User foundUser = userService.getUserByMail(mail);
+        return new ResponseEntity(converter.toUserResponse(foundUser), HttpStatus.OK);
     }
 
     @GetMapping("/tasks")
     public ResponseEntity getUserWithTasksByMail(@RequestParam("mail") final String mail) {
-        Optional<User> foundUser = userService.getUserByMail(mail);
-
-        return foundUser
-                .map(user -> new ResponseEntity(converter.toUserWithTaskResponseDto(user), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND));
+        User foundUser = userService.getUserByMail(mail);
+        return new ResponseEntity(converter.toUserWithTaskResponseDto(foundUser), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity addUser(@RequestBody InsertUserRequest request) {
+    public ResponseEntity createUser(@RequestBody InsertUserRequest request) {
         User userForSave = converter.fromInsertUserRequestDto(request);
 
-        try {
-            long savedUserId = userService.addUser(userForSave);
-            return new ResponseEntity(savedUserId, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity(HttpStatus.CONFLICT);
-        }
+        String savedUserMail = userService.createUser(userForSave);
+        return new ResponseEntity(savedUserMail, HttpStatus.CREATED);
     }
 }

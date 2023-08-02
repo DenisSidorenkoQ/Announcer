@@ -4,6 +4,7 @@ import com.exmple.task.entity.User;
 import com.exmple.task.repository.UserRepository;
 import java.util.Optional;
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,17 +13,21 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-    public Optional<User> getUserByMail(final String mail) {
-        return userRepository.findUserByMail(mail);
+    public User getUserByMail(final String mail) {
+        Optional<User> user = userRepository.findUserByMail(mail);
+        if(user.isPresent()) {
+            return user.get();
+        } else {
+            throw new EntityNotFoundException("User not found");
+        }
     }
 
-    public long addUser(final User userForSave) {
+    public String createUser(final User userForSave) throws EntityNotFoundException {
         Optional<User> foundUser = userRepository.findUserByMail(userForSave.getMail());
         if(foundUser.isEmpty()) {
-            return userRepository.save(userForSave).getId();
+            return userRepository.save(userForSave).getMail();
         } else {
-            throw new EntityExistsException();
+            throw new EntityExistsException("User is exists");
         }
-
     }
 }

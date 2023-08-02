@@ -6,9 +6,6 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@Builder
-public class UpdateTaskRequest {
-    private String title;
+public class UpdateTaskTextRequest {
     private String text;
-    private long timestamp;
 }
