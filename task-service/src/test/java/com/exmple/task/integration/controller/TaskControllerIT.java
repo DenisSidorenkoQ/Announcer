@@ -1,6 +1,7 @@
 package com.exmple.task.integration.controller;
 
 
+import com.exmple.task.entity.EStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.entity.User;
 import com.exmple.task.integration.config.TestConfigIT;
@@ -36,11 +37,11 @@ public class TaskControllerIT {
     void init() {
         userRepository.save(User.builder().mail("test@gmail.com").name("TestUser").build());
         userRepository.save(User.builder().mail("test2@gmail.com").name("TestUser").build());
-        taskRepository.save(Task.builder().id(1).title("Title").author(User.builder().mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
-        taskRepository.save(Task.builder().id(2).title("Title").author(User.builder().mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
-        taskRepository.save(Task.builder().id(3).title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
-        taskRepository.save(Task.builder().id(4).title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
-        taskRepository.save(Task.builder().id(5).title("Title").author(User.builder().name("TestUser").mail("test2@gmail.com").build()).text("Text").time(new Date(0)).build());
+        taskRepository.save(Task.builder().id(1).title("Title").author(User.builder().mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
+        taskRepository.save(Task.builder().id(2).title("Title").author(User.builder().mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
+        taskRepository.save(Task.builder().id(3).title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
+        taskRepository.save(Task.builder().id(4).title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
+        taskRepository.save(Task.builder().id(5).title("Title").author(User.builder().name("TestUser").mail("test2@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
     }
 
     @Test

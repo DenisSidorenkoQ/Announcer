@@ -1,5 +1,6 @@
 package com.exmple.task.service;
 
+import com.exmple.task.entity.EStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.repository.TaskRepository;
 import java.util.Date;
@@ -25,7 +26,7 @@ public class TaskService {
     }
 
     @Transactional
-    public void updateTaskText(final long taskId, final String text) {
+    public void updateTaskTextById(final long taskId, final String text) {
         Optional<Task> foundTask = taskRepository.findById(taskId);
         if (foundTask.isPresent()) {
             Task task = foundTask.get();
@@ -49,11 +50,11 @@ public class TaskService {
         }
     }
 
-    public List<Task> findTasksByDateAndId(final Date startDate, final long id) {
-        return taskRepository.findTasksByDateAndId(startDate, id, PageRequest.of(0, findTasksLimit));
+    public List<Task> findActiveTasksByDateAndId(final Date startDate, final long id) {
+        return taskRepository.findActiveTasksByDateAndId(startDate, id, PageRequest.of(0, findTasksLimit));
     }
 
-    public void updateTaskTitle(final long taskId, final String title) {
+    public void updateTaskTitleById(final long taskId, final String title) {
         Optional<Task> foundTask = taskRepository.findById(taskId);
 
         if (foundTask.isPresent()) {
@@ -65,7 +66,7 @@ public class TaskService {
         }
     }
 
-    public void updateTaskTime(final long taskId, final Date time) {
+    public void updateTaskTimeById(final long taskId, final Date time) {
         Optional<Task> foundTask = taskRepository.findById(taskId);
 
         if (foundTask.isPresent()) {
@@ -76,5 +77,17 @@ public class TaskService {
             throw new EntityNotFoundException("Task not found");
         }
 
+    }
+
+    public void updateTaskStatus(final long taskId, final EStatus status) {
+        Optional<Task> foundTask = taskRepository.findById(taskId);
+
+        if (foundTask.isPresent()) {
+            Task task = foundTask.get();
+            task.setStatus(status.toString());
+            taskRepository.saveAndFlush(task);
+        } else {
+            throw new EntityNotFoundException("Task not found");
+        }
     }
 }

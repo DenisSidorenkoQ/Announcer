@@ -1,5 +1,6 @@
 package com.exmple.task.unit.service;
 
+import com.exmple.task.entity.EStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.repository.TaskRepository;
 import com.exmple.task.service.TaskService;
@@ -64,7 +65,7 @@ public class TaskServiceTest {
         Task task = Task.builder().id(1).text("testText").build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
-        taskService.updateTaskText(task.getId(), task.getText());
+        taskService.updateTaskTextById(task.getId(), task.getText());
 
         verify(taskRepository).saveAndFlush(task);
     }
@@ -74,7 +75,7 @@ public class TaskServiceTest {
         Task task = Task.builder().id(1).text("testText").build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
 
-        taskService.updateTaskText(task.getId(), task.getText());
+        taskService.updateTaskTextById(task.getId(), task.getText());
 
         verify(taskRepository, never()).updateTask(anyInt(), anyString(), anyString(), any(Date.class));
     }
@@ -84,7 +85,7 @@ public class TaskServiceTest {
         Task task = Task.builder().id(1).title("testText").build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
-        taskService.updateTaskTitle(task.getId(), task.getTitle());
+        taskService.updateTaskTitleById(task.getId(), task.getTitle());
 
         verify(taskRepository).saveAndFlush(task);
     }
@@ -94,7 +95,7 @@ public class TaskServiceTest {
         Task task = Task.builder().id(1).title("testText").build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
 
-        taskService.updateTaskTitle(task.getId(), task.getTitle());
+        taskService.updateTaskTitleById(task.getId(), task.getTitle());
 
         verify(taskRepository, never()).updateTask(anyInt(), anyString(), anyString(), any(Date.class));
     }
@@ -104,7 +105,7 @@ public class TaskServiceTest {
         Task task = Task.builder().id(1).time(new Date(1000000)).build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
-        taskService.updateTaskTime(task.getId(), task.getTime());
+        taskService.updateTaskTimeById(task.getId(), task.getTime());
 
         verify(taskRepository).saveAndFlush(task);
     }
@@ -114,7 +115,7 @@ public class TaskServiceTest {
         Task task = Task.builder().id(1).time(new Date(1000000)).build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
 
-        taskService.updateTaskTime(task.getId(), task.getTime());
+        taskService.updateTaskTimeById(task.getId(), task.getTime());
 
         verify(taskRepository, never()).saveAndFlush(task);
     }
@@ -137,5 +138,25 @@ public class TaskServiceTest {
         taskService.deleteById(id);
 
         verify(taskRepository, times(0)).deleteById(id);
+    }
+
+    @Test
+    public void testUpdateTaskStatusWhenExists() {
+        Task task = Task.builder().id(1).time(new Date(1000000)).build();
+        when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
+
+        taskService.updateTaskStatus(task.getId(), EStatus.STATUS_ACTIVE);
+
+        verify(taskRepository).saveAndFlush(task);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void testUpdateTaskStatusWhenNotExists() {
+        Task task = Task.builder().id(1).time(new Date(1000000)).build();
+        when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
+
+        taskService.updateTaskStatus(task.getId(), EStatus.STATUS_ACTIVE);
+
+        verify(taskRepository, never()).saveAndFlush(task);
     }
 }

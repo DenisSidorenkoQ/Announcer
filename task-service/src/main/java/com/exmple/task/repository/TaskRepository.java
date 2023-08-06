@@ -22,9 +22,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findTaskByAuthor_Mail(String mail);
 
     @Query("FROM Task  " +
-            "WHERE time < :lastDate AND id >:lastId " +
+            "WHERE time<:lastDate AND id>:lastId AND status='Active' " +
             "ORDER BY time, id")
-    List<Task> findTasksByDateAndId(@Param("lastDate") Date lastDate,
-                                    @Param("lastId") long lastId,
-                                    Pageable pageable);
+    List<Task> findActiveTasksByDateAndId(@Param("lastDate") Date lastDate,
+                                          @Param("lastId") long lastId,
+                                          Pageable pageable);
+
 }

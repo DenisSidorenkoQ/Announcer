@@ -22,6 +22,7 @@ public class Task {
     private String text;
     @Temporal(TemporalType.TIMESTAMP)
     private Date time;
+    private String status;
     @ManyToOne
     @JoinColumn(name = "user_mail")
     @JsonBackReference

@@ -1,6 +1,7 @@
 package com.exmple.task.integration.controller;
 
 import com.exmple.task.dto.request.user.InsertUserRequest;
+import com.exmple.task.entity.EStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.entity.User;
 import com.exmple.task.integration.config.TestConfigIT;
@@ -44,8 +45,8 @@ public class UserControllerIT {
     @BeforeAll
     void init() {
         userRepository.save(User.builder().name("TestUser").mail("test@gmail.com").build());
-        taskRepository.save(Task.builder().title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
-        taskRepository.save(Task.builder().title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).build());
+        taskRepository.save(Task.builder().title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
+        taskRepository.save(Task.builder().title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
     }
 
     @Test

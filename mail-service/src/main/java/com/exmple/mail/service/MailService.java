@@ -2,6 +2,7 @@ package com.exmple.mail.service;
 
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @EnableAsync
+@Slf4j
 public class MailService {
     private final JavaMailSender javaMailSender;
 
@@ -32,6 +34,6 @@ public class MailService {
         helper.setSubject(title);
         helper.setText(text, true);
         javaMailSender.send(message);
-
+        log.info("Message send");
     }
 }
