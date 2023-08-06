@@ -52,7 +52,7 @@ public class NotificationMailService {
                     log.warn("Message was not sent");
                     taskService.updateTaskStatus(task.getId(), EStatus.STATUS_ACTIVE);
                 }
-                if (taskList.size() == findTasksLimit) {
+                if (i == findTasksLimit - 1) {
                     taskList = taskService.findActiveTasksByDateAndId(endDate, task.getId());
                 }
             }
