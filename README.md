@@ -9,4 +9,4 @@ TODO: Опиши, пожалуйста, команды сборки докер �
 
 Сборка:
 1. docker compose build
-2. docker compose up
+2. docker compose --env-file ./config/dev/.env up
