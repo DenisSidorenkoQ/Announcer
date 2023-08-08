@@ -1,4 +1,4 @@
-package com.exmple.task.config;
+package com.exmple.task.exception;
 
 import org.springframework.stereotype.Component;
 

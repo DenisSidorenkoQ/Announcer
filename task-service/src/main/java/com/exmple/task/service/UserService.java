@@ -1,6 +1,6 @@
 package com.exmple.task.service;
 
-import com.exmple.task.config.ErrorMessages;
+import com.exmple.task.exception.ErrorMessages;
 import com.exmple.task.entity.User;
 import com.exmple.task.repository.UserRepository;
 import java.util.Optional;

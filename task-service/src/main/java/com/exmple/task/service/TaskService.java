@@ -1,6 +1,6 @@
 package com.exmple.task.service;
 
-import com.exmple.task.config.ErrorMessages;
+import com.exmple.task.exception.ErrorMessages;
 import com.exmple.task.entity.EStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.repository.TaskRepository;

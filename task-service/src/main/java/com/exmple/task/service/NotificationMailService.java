@@ -1,6 +1,6 @@
 package com.exmple.task.service;
 
-import com.exmple.task.config.ErrorMessages;
+import com.exmple.task.exception.ErrorMessages;
 import com.exmple.task.converter.TaskConverter;
 import com.exmple.task.dto.request.SendMessageByTime;
 import com.exmple.task.entity.EStatus;
