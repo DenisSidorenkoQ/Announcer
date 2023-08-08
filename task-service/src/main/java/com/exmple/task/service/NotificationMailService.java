@@ -1,5 +1,6 @@
 package com.exmple.task.service;
 
+import com.exmple.task.config.ErrorMessages;
 import com.exmple.task.converter.TaskConverter;
 import com.exmple.task.dto.request.SendMessageByTime;
 import com.exmple.task.entity.EStatus;
@@ -29,9 +30,11 @@ public class NotificationMailService {
 
     @Value("${tasks.find-tasks.limit}")
     private int findTasksLimit;
+    @Value("${time-zone}")
+    private int TIME_ZONE;
 
     public void notifyByTask() {
-        Date endDate = new Date(Instant.now().toEpochMilli());
+        Date endDate = new Date(Instant.now().plusSeconds(3600L * TIME_ZONE).toEpochMilli()); //UTC+3
         List<Task> taskList =
                 taskService.findActiveTasksByDateAndId(endDate, 0);
 
@@ -44,15 +47,17 @@ public class NotificationMailService {
                             = taskConverter.toSendMessageByTimeDto(task);
                     ResponseEntity<SendMessageByTime> sendMailResponse =
                             restTemplate.postForEntity(sendMailURI, message, SendMessageByTime.class);
-                    taskList.remove(i);
                     if (sendMailResponse.getStatusCode() != HttpStatus.OK) {
                         throw new Exception();
+                    } else {
+                        taskList.remove(i);
                     }
                 } catch (Exception e) {
-                    log.warn("Message was not sent");
+                    log.warn(ErrorMessages.MESSAGE_NOT_SENT);
                     taskService.updateTaskStatus(task.getId(), EStatus.STATUS_ACTIVE);
+                    taskList.remove(i);
                 }
-                if (i == findTasksLimit - 1) {
+                if (taskList.isEmpty()) {
                     taskList = taskService.findActiveTasksByDateAndId(endDate, task.getId());
                 }
             }

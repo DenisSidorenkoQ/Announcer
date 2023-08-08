@@ -23,8 +23,8 @@ services:
       - postgres
     restart: on-failure
     environment:
-      MAIL_PASSWORD: eapmuzlkbcfeyrep
-      MAIL_USERNAME: denissidorenko975@gmail.com
+      - MAIL_PASSWORD
+      - MAIL_USERNAME
     ports:
       - "8081:8081"
 

@@ -1,5 +1,6 @@
 package com.exmple.task.service;
 
+import com.exmple.task.config.ErrorMessages;
 import com.exmple.task.entity.EStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.repository.TaskRepository;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-
     @Value("${tasks.find-tasks.limit}")
     private int findTasksLimit;
 
@@ -33,7 +33,7 @@ public class TaskService {
             task.setText(text);
             taskRepository.saveAndFlush(task);
         } else {
-            throw new EntityNotFoundException("Task not found");
+            throw new EntityNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }
     }
 
@@ -46,7 +46,7 @@ public class TaskService {
         if(foundTask.isPresent()) {
             taskRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException("Task not found");
+            throw new EntityNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }
     }
 
@@ -62,7 +62,7 @@ public class TaskService {
             task.setTitle(title);
             taskRepository.saveAndFlush(task);
         } else {
-            throw new EntityNotFoundException("Task not found");
+            throw new EntityNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }
     }
 
@@ -74,7 +74,7 @@ public class TaskService {
             task.setTime(time);
             taskRepository.saveAndFlush(task);
         } else {
-            throw new EntityNotFoundException("Task not found");
+            throw new EntityNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }
 
     }
@@ -87,7 +87,7 @@ public class TaskService {
             task.setStatus(status.toString());
             taskRepository.saveAndFlush(task);
         } else {
-            throw new EntityNotFoundException("Task not found");
+            throw new EntityNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }
     }
 }

@@ -2,9 +2,10 @@ package com.exmple.task.controller;
 
 import com.exmple.task.converter.UserConverter;
 import com.exmple.task.dto.request.user.InsertUserRequest;
+import com.exmple.task.dto.response.user.UserResponse;
+import com.exmple.task.dto.response.user.UserWithTaskResponse;
 import com.exmple.task.entity.User;
 import com.exmple.task.service.UserService;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +19,9 @@ public class UserController {
     private final UserConverter converter;
 
     @GetMapping
-    public ResponseEntity getUserByMail(@RequestParam("mail") final String mail) {
+    public UserResponse getUserByMail(@RequestParam("mail") final String mail) {
         User foundUser = userService.getUserByMail(mail);
-        return new ResponseEntity(converter.toUserResponse(foundUser), HttpStatus.OK);
-    }
-
-    @GetMapping("/tasks")
-    public ResponseEntity getUserWithTasksByMail(@RequestParam("mail") final String mail) {
-        User foundUser = userService.getUserByMail(mail);
-        return new ResponseEntity(converter.toUserWithTaskResponseDto(foundUser), HttpStatus.OK);
+        return converter.toUserResponse(foundUser);
     }
 
     @PostMapping

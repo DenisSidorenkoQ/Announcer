@@ -1,5 +1,6 @@
 package com.exmple.task.service;
 
+import com.exmple.task.config.ErrorMessages;
 import com.exmple.task.entity.User;
 import com.exmple.task.repository.UserRepository;
 import java.util.Optional;
@@ -18,7 +19,7 @@ public class UserService {
         if(user.isPresent()) {
             return user.get();
         } else {
-            throw new EntityNotFoundException("User not found");
+            throw new EntityNotFoundException(ErrorMessages.USER_NOT_FOUND);
         }
     }
 
@@ -27,7 +28,7 @@ public class UserService {
         if(foundUser.isEmpty()) {
             return userRepository.save(userForSave).getMail();
         } else {
-            throw new EntityExistsException("User is exists");
+            throw new EntityExistsException(ErrorMessages.USER_IS_EXISTS);
         }
     }
 }
