@@ -16,6 +16,8 @@ public class User {
     @Id
     private String mail;
     private String name;
+
+    // TODO (vm): lets delete reference to tasks and try to handle exceptional situation
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Task> tasks;

@@ -4,6 +4,8 @@ import com.exmple.task.exception.ErrorMessages;
 import com.exmple.task.entity.EStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.repository.TaskRepository;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,13 @@ public class TaskService {
     private int findTasksLimit;
 
     public long createTask(Task task) {
+
+//        Task taskForCreate = Task.builder()
+//                .text(task.getText())
+//                .title(task.getTitle())
+//                .createTS(LocalDateTime.now())
+//                .build();
+
         return taskRepository.save(task).getId();
     }
 
@@ -29,14 +38,18 @@ public class TaskService {
     public void updateTaskTextById(final long taskId, final String text) {
         Optional<Task> foundTask = taskRepository.findById(taskId);
         if (foundTask.isPresent()) {
+            // TODO (vm): we need business validation here, e.g. check status of the Task
+
             Task task = foundTask.get();
             task.setText(text);
-            taskRepository.saveAndFlush(task);
+            // TODO (vm): почему здесь не обязательно вызывать saveAndFlush?
+            // taskRepository.saveAndFlush(task);
         } else {
             throw new EntityNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Task> getTaskByMail(String mail) {
         return taskRepository.findTaskByAuthor_Mail(mail);
     }

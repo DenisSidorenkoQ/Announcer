@@ -23,6 +23,8 @@ public class NotificationMailService {
 
     private final TaskService taskService;
     private final TaskConverter taskConverter;
+
+    // TODO (vm): я бы создал NotificationService, у которого было бы 2 имплементации: RestNotificationService, MessagingNotificationService
     private final RestTemplate restTemplate;
 
     @Value("${mail-service.send-by-time.url}")
@@ -42,6 +44,20 @@ public class NotificationMailService {
             for (int i = 0; i < taskList.size(); i++) {
                 final Task task = taskList.get(i);
                 try {
+
+                    // 1. mark task as in process by current instance (1 transaction)
+
+                    // 2. try to send
+
+                    // 3. analyse sent message and change status to Inactive
+
+                    // 4. for error sending we can mark task for sending retry
+
+
+
+
+
+
                     taskService.updateTaskStatus(task.getId(), EStatus.STATUS_INACTIVE);
                     SendMessageByTime message
                             = taskConverter.toSendMessageByTimeDto(task);

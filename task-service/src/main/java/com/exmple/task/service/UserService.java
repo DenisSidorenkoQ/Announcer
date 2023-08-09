@@ -16,11 +16,8 @@ public class UserService {
 
     public User getUserByMail(final String mail) {
         Optional<User> user = userRepository.findUserByMail(mail);
-        if(user.isPresent()) {
-            return user.get();
-        } else {
-            throw new EntityNotFoundException(ErrorMessages.USER_NOT_FOUND);
-        }
+
+        return user.orElseThrow(() -> new EntityNotFoundException(ErrorMessages.USER_NOT_FOUND));
     }
 
     public String createUser(final User userForSave) throws EntityNotFoundException {

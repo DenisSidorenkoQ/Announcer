@@ -1,6 +1,8 @@
 package com.exmple.task.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.*;
 import lombok.*;
@@ -27,4 +29,8 @@ public class Task {
     @JoinColumn(name = "user_mail")
     @JsonBackReference
     private User author;
+
+//    private LocalDateTime createTS;
+//    private LocalDateTime updateTS;
+
 }

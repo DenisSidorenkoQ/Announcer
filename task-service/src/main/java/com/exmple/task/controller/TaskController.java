@@ -37,6 +37,8 @@ public class TaskController {
     public ResponseEntity<Long> addTask(@RequestBody @Valid final InsertTaskRequest request) {
         Task taskForSave = taskConverter.fromDto(request);
         taskForSave.setAuthor(User.builder().mail(request.getMail()).build());
+        // TODO (vm): we need ENUM instead
+        // TODO (vm): set status in service layer
         taskForSave.setStatus(EStatus.STATUS_ACTIVE.toString());
         long savedTaskId = taskService.createTask(taskForSave);
         return new ResponseEntity<>(savedTaskId, HttpStatus.CREATED);
