@@ -1,6 +1,7 @@
 package com.exmple.task.repository;
 
 import com.exmple.task.entity.Task;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -19,12 +20,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("UPDATE Task AS t SET t.text=:text, t.title=:title, t.time=:time WHERE t.id=:id")
     void updateTask(@Param("id") long id, @Param("text") String text, @Param("title") String title, @Param("time") Date time);
 
-    List<Task> findTaskByAuthor_Mail(String mail);
+    List<Task> findTasksByUserMail(String mail);
 
     @Query("FROM Task  " +
-            "WHERE time<:lastDate AND id>:lastId AND status='Active' " +
+            "WHERE time<:lastDate AND id>:lastId AND ( status='ACTIVE' OR status='RETRY' ) " +
             "ORDER BY time, id")
-    List<Task> findActiveTasksByDateAndId(@Param("lastDate") Date lastDate,
+    List<Task> findActiveTasksByDateAndId(@Param("lastDate") LocalDateTime lastDate,
                                           @Param("lastId") long lastId,
                                           Pageable pageable);
 

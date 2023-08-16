@@ -1,43 +1,20 @@
-package com.example.platformservice.entity.responce;
+package com.exmple.task.dto.response;
 
 import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ErrorResponse {
   private int statusCode;
   private String message;
   private String description;
 
-  public ErrorResponse() {}
-
-  public ErrorResponse(final int statusCode, final String message, final String description) {
-    this.statusCode = statusCode;
-    this.message = message;
-    this.description = description;
-  }
-
-  public int getStatusCode() {
-    return statusCode;
-  }
-
-  public void setStatusCode(final int statusCode) {
-    this.statusCode = statusCode;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(final String message) {
-    this.message = message;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(final String description) {
-    this.description = description;
-  }
 
   @Override
   public boolean equals(final Object o) {

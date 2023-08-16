@@ -1,12 +1,14 @@
 package com.exmple.task.integration.controller;
 
 
-import com.exmple.task.entity.EStatus;
+import com.exmple.task.converter.mapper.DateMapper;
+import com.exmple.task.entity.TaskStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.entity.User;
 import com.exmple.task.integration.config.TestConfigIT;
 import com.exmple.task.repository.TaskRepository;
 import com.exmple.task.repository.UserRepository;
+import java.time.LocalDateTime;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -33,36 +35,41 @@ public class TaskControllerIT {
     @Autowired
     private UserRepository userRepository;
 
+    private LocalDateTime testTime;
+    private long testTimestamp;
+
     @BeforeAll
     void init() {
+        testTime = LocalDateTime.now();
+        DateMapper dateMapper = new DateMapper();
+        testTimestamp = dateMapper.dateAsLong(testTime);
         userRepository.save(User.builder().mail("test@gmail.com").name("TestUser").build());
         userRepository.save(User.builder().mail("test2@gmail.com").name("TestUser").build());
-        taskRepository.save(Task.builder().id(1).title("Title").author(User.builder().mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
-        taskRepository.save(Task.builder().id(2).title("Title").author(User.builder().mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
-        taskRepository.save(Task.builder().id(3).title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
-        taskRepository.save(Task.builder().id(4).title("Title").author(User.builder().name("TestUser").mail("test@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
-        taskRepository.save(Task.builder().id(5).title("Title").author(User.builder().name("TestUser").mail("test2@gmail.com").build()).text("Text").time(new Date(0)).status(EStatus.STATUS_ACTIVE.toString()).build());
+        userRepository.save(User.builder().mail("test3@gmail.com").name("TestUser").build());
+        taskRepository.save(Task.builder().id(1).title("Title").userMail("test@gmail.com").text("Text").time(testTime).status(TaskStatus.ACTIVE).build());
+        taskRepository.save(Task.builder().id(2).title("Title").userMail("test3@gmail.com").text("Text").time(testTime).status(TaskStatus.ACTIVE).build());
+        taskRepository.save(Task.builder().id(3).title("Title").userMail("test3@gmail.com").text("Text").time(testTime).status(TaskStatus.ACTIVE).build());
+        taskRepository.save(Task.builder().id(4).title("Title").userMail("test3@gmail.com").text("Text").time(testTime).status(TaskStatus.ACTIVE).build());
+        taskRepository.save(Task.builder().id(5).title("Title").userMail("test@gmail.com").text("Text").time(testTime).status(TaskStatus.ACTIVE).build());
     }
 
     @Test
     public void createNewTaskShouldReturnCreatedTaskId() throws Exception {
-        mockMvc.perform(post("/api/v1/tasks")
+        mockMvc.perform(post("/api/v1/users/{userMail}/tasks", "test@gmail.com")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"mail\":\"test@gmail.com\",\"title\":\"Title\",\"text\":\"Text\",\"timestamp\":1000}"))
+                        .content("{\"title\":\"Title\",\"text\":\"Text\",\"timestamp\":1000}"))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("6"));
     }
 
     @Test
     public void getTasksByMailShouldReturnTaskList() throws Exception {
-        mockMvc.perform(get("/api/v1/tasks")
-                .param("mail", "test@gmail.com")
-                )
+        mockMvc.perform(get("/api/v1/users/{userMail}/tasks", "test3@gmail.com"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[" +
-                        "{\"id\":2,\"title\":\"Title\",\"text\":\"Text\",\"time\":0}," +
-                        "{\"id\":3,\"title\":\"Title\",\"text\":\"Text\",\"time\":0}," +
-                        "{\"id\":4,\"title\":\"Title\",\"text\":\"Text\",\"time\":0}" +
+                        "{\"id\":2,\"title\":\"Title\",\"text\":\"Text\",\"time\":" + testTimestamp + "}," +
+                        "{\"id\":3,\"title\":\"Title\",\"text\":\"Text\",\"time\":" + testTimestamp + "}," +
+                        "{\"id\":4,\"title\":\"Title\",\"text\":\"Text\",\"time\":" + testTimestamp + "}" +
                         "]"));
     }
 

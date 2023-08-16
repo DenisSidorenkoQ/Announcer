@@ -1,6 +1,6 @@
 package com.exmple.task.exception.handler;
 
-import com.example.platformservice.entity.responce.ErrorResponse;
+import com.exmple.task.dto.response.ErrorResponse;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 

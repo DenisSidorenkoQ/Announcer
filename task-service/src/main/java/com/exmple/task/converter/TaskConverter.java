@@ -11,11 +11,13 @@ import org.mapstruct.Mappings;
 
 @Mapper(uses = DateMapper.class)
 public interface TaskConverter {
-    @Mapping(source = "request.timestamp", target = "time")
-    Task fromDto(final InsertTaskRequest request);
+    @Mappings({
+        @Mapping(source = "request.timestamp", target = "time")
+    })
+    Task fromDto(final InsertTaskRequest request, String userMail);
 
     @Mappings({
-            @Mapping(source = "task.author.mail", target = "recipient")
+            @Mapping(source = "task.userMail", target = "recipient")
     })
     SendMessageByTime toSendMessageByTimeDto(final Task task);
 

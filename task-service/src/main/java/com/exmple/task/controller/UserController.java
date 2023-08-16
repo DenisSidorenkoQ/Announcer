@@ -3,7 +3,6 @@ package com.exmple.task.controller;
 import com.exmple.task.converter.UserConverter;
 import com.exmple.task.dto.request.user.InsertUserRequest;
 import com.exmple.task.dto.response.user.UserResponse;
-import com.exmple.task.dto.response.user.UserWithTaskResponse;
 import com.exmple.task.entity.User;
 import com.exmple.task.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +17,9 @@ public class UserController {
     private final UserService userService;
     private final UserConverter converter;
 
-    @GetMapping
-    public UserResponse getUserByMail(@RequestParam("mail") final String mail) {
-        User foundUser = userService.getUserByMail(mail);
+    @GetMapping("/{userMail}")
+    public UserResponse getUserByMail(@PathVariable final String userMail) {
+        User foundUser = userService.getUserByMail(userMail);
         return converter.toUserResponse(foundUser);
     }
 

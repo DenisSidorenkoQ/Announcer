@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MailController {
     private final MailService mailService;
 
-    @PostMapping("/by-time/send")
+    @PostMapping("/by-time/try-send")
     public ResponseEntity<Void> sendMessage(@RequestBody @Valid SendMessageByTimeRequest request) {
         try {
             mailService.sendMessage(request.getRecipient(), request.getText(), request.getTitle());

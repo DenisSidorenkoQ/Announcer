@@ -1,12 +1,11 @@
 package com.exmple.task.service;
 
 import com.exmple.task.exception.ErrorMessages;
-import com.exmple.task.entity.EStatus;
+import com.exmple.task.entity.TaskStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.repository.TaskRepository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
@@ -25,13 +24,15 @@ public class TaskService {
 
     public long createTask(Task task) {
 
-//        Task taskForCreate = Task.builder()
-//                .text(task.getText())
-//                .title(task.getTitle())
-//                .createTS(LocalDateTime.now())
-//                .build();
+        Task taskForCreate = Task.builder()
+                .text(task.getText())
+                .title(task.getTitle())
+                .time(task.getTime())
+                .userMail(task.getUserMail())
+                .status(TaskStatus.ACTIVE)
+                .build();
 
-        return taskRepository.save(task).getId();
+        return taskRepository.save(taskForCreate).getId();
     }
 
     @Transactional
@@ -39,9 +40,10 @@ public class TaskService {
         Optional<Task> foundTask = taskRepository.findById(taskId);
         if (foundTask.isPresent()) {
             // TODO (vm): we need business validation here, e.g. check status of the Task
-
             Task task = foundTask.get();
-            task.setText(text);
+            if(task.getStatus().equals(TaskStatus.ACTIVE)) {
+                task.setText(text);
+            }
             // TODO (vm): почему здесь не обязательно вызывать saveAndFlush?
             // taskRepository.saveAndFlush(task);
         } else {
@@ -51,9 +53,10 @@ public class TaskService {
 
     @Transactional(readOnly = true)
     public List<Task> getTaskByMail(String mail) {
-        return taskRepository.findTaskByAuthor_Mail(mail);
+        return taskRepository.findTasksByUserMail(mail);
     }
 
+    @Transactional
     public void deleteById(long id) {
         Optional<Task> foundTask = taskRepository.findById(id);
         if(foundTask.isPresent()) {
@@ -63,42 +66,45 @@ public class TaskService {
         }
     }
 
-    public List<Task> findActiveTasksByDateAndId(final Date startDate, final long id) {
+    public List<Task> findTasksByDateAndId(final LocalDateTime startDate, final long id) {
         return taskRepository.findActiveTasksByDateAndId(startDate, id, PageRequest.of(0, findTasksLimit));
     }
 
+    @Transactional
     public void updateTaskTitleById(final long taskId, final String title) {
         Optional<Task> foundTask = taskRepository.findById(taskId);
 
         if (foundTask.isPresent()) {
             Task task = foundTask.get();
-            task.setTitle(title);
-            taskRepository.saveAndFlush(task);
+            if(task.getStatus().equals(TaskStatus.ACTIVE)) {
+                task.setTitle(title);
+            }
         } else {
             throw new EntityNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }
     }
 
-    public void updateTaskTimeById(final long taskId, final Date time) {
+    public void updateTaskTimeById(final long taskId, final LocalDateTime time) {
         Optional<Task> foundTask = taskRepository.findById(taskId);
 
         if (foundTask.isPresent()) {
             Task task = foundTask.get();
-            task.setTime(time);
-            taskRepository.saveAndFlush(task);
+            if(task.getStatus().equals(TaskStatus.ACTIVE)) {
+                task.setTime(time);
+            }
         } else {
             throw new EntityNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }
 
     }
 
-    public void updateTaskStatus(final long taskId, final EStatus status) {
+    @Transactional
+    public void updateTaskStatus(final long taskId, final TaskStatus status) {
         Optional<Task> foundTask = taskRepository.findById(taskId);
 
         if (foundTask.isPresent()) {
             Task task = foundTask.get();
-            task.setStatus(status.toString());
-            taskRepository.saveAndFlush(task);
+            task.setStatus(status);
         } else {
             throw new EntityNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }

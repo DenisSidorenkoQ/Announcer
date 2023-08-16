@@ -1,9 +1,6 @@
 package com.exmple.task.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import java.time.LocalDateTime;
-import java.util.Date;
 import javax.persistence.*;
 import lombok.*;
 
@@ -22,15 +19,9 @@ public class Task {
     private long id;
     private String title;
     private String text;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date time;
-    private String status;
-    @ManyToOne
-    @JoinColumn(name = "user_mail")
-    @JsonBackReference
-    private User author;
-
-//    private LocalDateTime createTS;
-//    private LocalDateTime updateTS;
-
+    private LocalDateTime time;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
+    @Column(name = "user_mail")
+    private String userMail;
 }

@@ -1,9 +1,10 @@
 package com.exmple.task.unit.service;
 
-import com.exmple.task.entity.EStatus;
+import com.exmple.task.entity.TaskStatus;
 import com.exmple.task.entity.Task;
 import com.exmple.task.repository.TaskRepository;
 import com.exmple.task.service.TaskService;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,16 +35,16 @@ public class TaskServiceTest {
     public void shouldCreateTask() {
         Task task = Task.builder()
                 .text("Text")
-                .time(new Date(20000))
+                .time(LocalDateTime.now())
                 .build();
         Task returnableTask = Task.builder()
-                .id(1).text("Text").time(new Date(20000)).build();
-        given(taskRepository.save(task)).willReturn(returnableTask);
+                .id(1).text("Text").time(LocalDateTime.now()).build();
+        given(taskRepository.save(any(Task.class))).willReturn(returnableTask);
 
         long taskId = taskService.createTask(task);
 
         assertThat(taskId, is(1L));
-        verify(taskRepository, times(1)).save(task);
+        verify(taskRepository, times(1)).save(any(Task.class));
     }
 
     @Test
@@ -52,22 +53,20 @@ public class TaskServiceTest {
         List<Task> tasks = new ArrayList<>();
         tasks.add(Task.builder().build());
         tasks.add(Task.builder().build());
-        when(taskRepository.findTaskByAuthor_Mail(mail)).thenReturn(tasks);
+        when(taskRepository.findTasksByUserMail(mail)).thenReturn(tasks);
 
         List<Task> result = taskService.getTaskByMail(mail);
 
         Assertions.assertEquals(tasks, result);
-        verify(taskRepository, times(1)).findTaskByAuthor_Mail(mail);
+        verify(taskRepository, times(1)).findTasksByUserMail(mail);
     }
 
     @Test
     public void testUpdateTaskTextWhenExists() {
-        Task task = Task.builder().id(1).text("testText").build();
+        Task task = Task.builder().id(1).text("testText").status(TaskStatus.ACTIVE).build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
         taskService.updateTaskTextById(task.getId(), task.getText());
-
-        verify(taskRepository).saveAndFlush(task);
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -82,12 +81,10 @@ public class TaskServiceTest {
 
     @Test
     public void testUpdateTitleWhenExists() {
-        Task task = Task.builder().id(1).title("testText").build();
+        Task task = Task.builder().id(1).title("testText").status(TaskStatus.ACTIVE).build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
         taskService.updateTaskTitleById(task.getId(), task.getTitle());
-
-        verify(taskRepository).saveAndFlush(task);
     }
 
     @Test(expected = EntityNotFoundException.class)
@@ -102,17 +99,15 @@ public class TaskServiceTest {
 
     @Test
     public void testUpdateTaskTimeWhenExists() {
-        Task task = Task.builder().id(1).time(new Date(1000000)).build();
+        Task task = Task.builder().id(1).time(LocalDateTime.now()).status(TaskStatus.ACTIVE).build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
         taskService.updateTaskTimeById(task.getId(), task.getTime());
-
-        verify(taskRepository).saveAndFlush(task);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void testUpdateTaskTimeWhenNotExists() {
-        Task task = Task.builder().id(1).time(new Date(1000000)).build();
+        Task task = Task.builder().id(1).time(LocalDateTime.now()).build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
 
         taskService.updateTaskTimeById(task.getId(), task.getTime());
@@ -142,21 +137,17 @@ public class TaskServiceTest {
 
     @Test
     public void testUpdateTaskStatusWhenExists() {
-        Task task = Task.builder().id(1).time(new Date(1000000)).build();
+        Task task = Task.builder().id(1).time(LocalDateTime.now()).build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
-        taskService.updateTaskStatus(task.getId(), EStatus.STATUS_ACTIVE);
-
-        verify(taskRepository).saveAndFlush(task);
+        taskService.updateTaskStatus(task.getId(), TaskStatus.ACTIVE);
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void testUpdateTaskStatusWhenNotExists() {
-        Task task = Task.builder().id(1).time(new Date(1000000)).build();
+        Task task = Task.builder().id(1).time(LocalDateTime.now()).build();
         when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
 
-        taskService.updateTaskStatus(task.getId(), EStatus.STATUS_ACTIVE);
-
-        verify(taskRepository, never()).saveAndFlush(task);
+        taskService.updateTaskStatus(task.getId(), TaskStatus.ACTIVE);
     }
 }
