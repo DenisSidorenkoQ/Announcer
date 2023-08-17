@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "users")
-public class User {
+public class User extends Domain {
     @Id
     private String mail;
     private String name;

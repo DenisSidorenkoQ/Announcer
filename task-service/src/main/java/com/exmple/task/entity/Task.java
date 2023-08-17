@@ -13,7 +13,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @Table(name = "tasks")
-public class Task {
+public class Task extends Domain {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private long id;

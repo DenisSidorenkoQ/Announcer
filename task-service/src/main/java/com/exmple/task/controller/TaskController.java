@@ -67,6 +67,7 @@ public class TaskController {
         taskService.deleteById(taskId);
     }
 
+    // TODO (vm): We MUST create signle service method to update all data in SINGLE transaction
     @PutMapping("/tasks/{taskId}/master-info")
     public void updateTaskTitleAndTextById(@PathVariable final int taskId,
                                            @RequestBody final UpdateMasterInfoRequest request) {
